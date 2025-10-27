@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: mcp-rancher-cert
+  namespace: mcp-rancher
+spec:
+  commonName: mcp-rancher.kryczech.net
+  dnsNames:
+  - mcp-rancher.kryczech.net
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-dns
+  secretName: mcp-rancher-server-tls

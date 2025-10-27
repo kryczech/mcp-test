@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mcp-rancher
+  namespace: mcp-rancher
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mcp-rancher
+  template:
+    metadata:
+      labels:
+        app: mcp-rancher
+    spec:
+      containers:
+        - name: mcp-rancher
+          image: registry.kryczech.net/kryczech/n8n/mcp-rancher:latest
+          ports:
+            - containerPort: 8765
+          envFrom:
+            - secretRef:
+                name: mcp-rancher-secret
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 8765
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 8765
+            initialDelaySeconds: 10
+            periodSeconds: 15
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
